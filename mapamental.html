@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Jornada do Hacker Ético</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg-color: #111827;
+            --card-color: #1F2937;
+            --border-color: #374151;
+            --text-color: #D1D5DB;
+            --text-muted-color: #9CA3AF;
+            --text-title-color: #FFFFFF;
+            --accent-color: #22D3EE;
+            --accent-hover-color: #67E8F9;
+            --warning-bg-color: rgba(239, 68, 68, 0.1);
+            --warning-border-color: #EF4444;
+            --warning-title-color: #F87171; /* red-400 */
+            --warning-text-color: #FECACA; /* red-200 */
+            --header-bg-color: rgba(31, 41, 55, 0.5); /* bg-gray-800/50 */
+            --header-border-color: #374151; /* border-gray-700 */
+            --header-text-color: #D1D5DB; /* text-gray-300 */
+            --search-bg-color: #374151; /* bg-gray-700 */
+        }
+        html[data-theme='light'] {
+            --bg-color: #F9FAFB;
+            --card-color: #FFFFFF;
+            --border-color: #E5E7EB;
+            --text-color: #374151;
+            --text-muted-color: #6B7280;
+            --text-title-color: #111827;
+            --accent-color: #0891B2;
+            --accent-hover-color: #06B6D4;
+            --warning-bg-color: rgba(239, 68, 68, 0.1);
+            --warning-border-color: #EF4444;
+            --warning-title-color: #B91C1C; /* red-800 */
+            --warning-text-color: #991B1B; /* red-900 */
+            --header-bg-color: rgba(255, 255, 255, 0.8); /* bg-white/80 */
+            --header-border-color: #E5E7EB; /* border-gray-200 */
+            --header-text-color: #374151; /* text-gray-700 */
+            --search-bg-color: #F3F4F6; /* bg-gray-100 */
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .card { background-color: var(--card-color); border: 1px solid var(--border-color); }
+        .warning-box { background-color: var(--warning-bg-color); border-left: 4px solid var(--warning-border-color); }
+        .warning-box h3 { color: var(--warning-title-color); }
+        .warning-box p { color: var(--warning-text-color); }
+        .text-title { color: var(--text-title-color); }
+        .text-accent { color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+        .hover\:text-accent:hover { color: var(--accent-hover-color); }
+        .progress-bar-bg { background-color: var(--border-color); }
+        .progress-bar-fill { background-color: var(--accent-color); transition: width 0.5s ease-in-out; }
+        .header { background-color: var(--header-bg-color); border-bottom-color: var(--header-border-color); color: var(--header-text-color); }
+        .search-bar { background-color: var(--search-bg-color); color: var(--text-title-color); }
+        .search-bar::placeholder { color: var(--text-muted-color); }
+        .dropdown-menu { background-color: var(--card-color); border-color: var(--border-color); }
+        .dropdown-menu a { color: var(--text-color); }
+        .dropdown-menu a:hover { background-color: var(--border-color); color: var(--text-title-color); }
+        code { background-color: #374151; color: #10B981; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; }
+        pre code { background-color: #1e293b; color: #e5e7eb; padding: 1em; border-radius: 5px; display: block; overflow-x: auto; }
+
+        .content-section:target { animation: highlight 1.5s ease-in-out; }
+        @keyframes highlight {
+            0% { background-color: rgba(59, 130, 246, 0.1); }
+            100% { background-color: transparent; }
+        }
+        .progress-step { transition: all 0.3s ease; }
+        .platform-card { display: block; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .platform-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 255, 255, 0.1); }
+        .task-checkbox { appearance: none; width: 1.5rem; height: 1.5rem; border: 2px solid #4B5563; border-radius: 50%; cursor: pointer; transition: all 0.2s ease; position: relative; }
+        .task-checkbox:checked { background-color: #10B981; border-color: #10B981; }
+        .task-checkbox:checked::after { content: '✔'; color: var(--card-color); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.9rem; font-weight: bold; }
+        #desktop-menu-button svg { transition: transform 0.3s ease; }
+        #desktop-menu-button.open svg { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="header backdrop-blur-sm sticky top-0 z-50 border-b">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl sm:text-2xl font-bold text-title font-mono tracking-wider">
+                <a href="#"><span class="text-accent">&gt;</span> A Jornada do Hacker Ético</a>
+            </h1>
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:block relative">
+                    <input type="text" id="search-bar" placeholder="Pesquisar tópico..." class="search-bar placeholder-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 w-48">
+                </div>
+                <!-- Menu Desktop -->
+                <div class="hidden md:block relative">
+                    <button id="desktop-menu-button" class="flex items-center space-x-2 text-lg hover:text-accent transition-colors focus:outline-none">
+                        <span>Fases</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="desktop-menu" class="hidden absolute right-0 mt-2 w-56 dropdown-menu rounded-lg shadow-lg py-2 z-50 border">
+                        <a href="#fase1" class="block px-4 py-2">Fase 1: Fundações</a>
+                        <a href="#fase2" class="block px-4 py-2">Fase 2: Ferramentas</a>
+                        <a href="#fase3" class="block px-4 py-2">Fase 3: Mentalidade</a>
+                        <a href="#fase4" class="block px-4 py-2">Fase 4: O Arsenal</a>
+                        <a href="#fase5" class="block px-4 py-2">Fase 5: Prática Legal</a>
+                        <a href="#fase6" class="block px-4 py-2">Fase 6: Especializações</a>
+                        <a href="#fase7" class="block px-4 py-2">Fase 7: Web Avançado</a>
+                        <a href="#fase8" class="block px-4 py-2">Fase 8: Redes Corporativas</a>
+                        <a href="#fase9" class="block px-4 py-2">Fase 9: Reversing & Exploits</a>
+                        <a href="#fase10" class="block px-4 py-2">Fase 10: Carreira e Bug Bounty</a>
+                        <a href="#fase11" class="block px-4 py-2">Fase 11: Comunidade</a>
+                    </div>
+                </div>
+                 <!-- Theme Toggle -->
+                <button id="theme-toggle" class="focus:outline-none hover:text-accent">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05A1 1 0 003.636 3.636l-.707.707a1 1 0 001.414 1.414l.707-.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zm7.536 2.464a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707z"></path></svg>
+                </button>
+                <!-- Botão do Menu Mobile -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Menu Mobile (escondido por padrão) -->
+        <div id="mobile-menu" class="hidden md:hidden dropdown-menu">
+            <div class="px-4 pt-2 pb-3">
+                <input type="text" id="mobile-search-bar" placeholder="Pesquisar tópico..." class="search-bar placeholder-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full mb-4">
+            </div>
+            <a href="#fase1" class="block py-2 px-6 text-lg">Fase 1: Fundações</a>
+            <a href="#fase2" class="block py-2 px-6 text-lg">Fase 2: Ferramentas</a>
+            <a href="#fase3" class="block py-2 px-6 text-lg">Fase 3: Mentalidade</a>
+            <a href="#fase4" class="block py-2 px-6 text-lg">Fase 4: O Arsenal</a>
+            <a href="#fase5" class="block py-2 px-6 text-lg">Fase 5: Prática Legal</a>
+            <a href="#fase6" class="block py-2 px-6 text-lg">Fase 6: Especializações</a>
+            <a href="#fase7" class="block py-2 px-6 text-lg">Fase 7: Web Avançado</a>
+            <a href="#fase8" class="block py-2 px-6 text-lg">Fase 8: Redes Corporativas</a>
+            <a href="#fase9" class="block py-2 px-6 text-lg">Fase 9: Reversing & Exploits</a>
+            <a href="#fase10" class="block py-2 px-6 text-lg">Fase 10: Carreira e Bug Bounty</a>
+            <a href="#fase11" class="block py-2 px-6 text-lg">Fase 11: Comunidade</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Introduction -->
+        <section class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-title mb-4">Bem-vindo, futuro Hacker.</h2>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">Este é o seu mapa. Siga as fases, seja consistente e, acima de tudo, seja curioso. A jornada é longa, mas a recompensa é o conhecimento.</p>
+        </section>
+        
+        <!-- Progress Bar -->
+        <section class="mb-16">
+            <h3 class="text-2xl font-bold text-title text-center mb-4">Progresso da Jornada</h3>
+            <div class="w-full progress-bar-bg rounded-full h-2.5 mb-4">
+                <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <div class="flex flex-wrap justify-between w-full max-w-6xl mx-auto">
+                <a href="#fase1" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">1</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Fundações</p></a>
+                <a href="#fase2" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">2</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Ferramentas</p></a>
+                <a href="#fase3" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">3</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Mentalidade</p></a>
+                <a href="#fase4" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">4</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Arsenal</p></a>
+                <a href="#fase5" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">5</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Prática</p></a>
+                <a href="#fase6" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">6</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Especializações</p></a>
+                <a href="#fase7" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">7</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Web Avançado</p></a>
+                <a href="#fase8" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">8</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Redes Corp.</p></a>
+                <a href="#fase9" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">9</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Reversing</p></a>
+                <a href="#fase10" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">10</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Carreira</p></a>
+                <a href="#fase11" class="progress-step text-center group p-2"><div class="w-8 h-8 mx-auto rounded-full bg-gray-700 group-hover:bg-cyan-500 flex items-center justify-center text-white font-bold">11</div><p class="mt-2 text-xs text-gray-400 group-hover:text-white">Comunidade</p></a>
+            </div>
+        </section>
+
+        <div class="warning-box p-6 rounded-lg mb-16">
+            <h3 class="font-bold text-xl mb-2">AVISO IMPORTANTE PARA O ALUNO</h3>
+            <p>O conhecimento que vai adquirir é poderoso. A diferença entre um herói (Hacker Ético) e um criminoso (Black Hat) é uma única palavra: <strong class="font-bold">PERMISSÃO</strong>. Use sempre as suas habilidades para construir, proteger e ajudar, e apenas em sistemas que tenha autorização explícita para testar.</p>
+        </div>
+
+        <!-- Fases -->
+        <div id="phases-container" class="space-y-20">
+            
+            <section id="fase1" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 1: AS FUNDAÇÕES</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">1. Lógica de Programação</h4><input type="checkbox" class="task-checkbox" id="task-1"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Antes de escrever código, precisa de aprender a "pensar" como um computador.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Recursos:</h5><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><a href="https://www.youtube.com/watch?v=8mei6uVttho&list=PLHz_AreHm4dmSj0MHol_aoNYCSGFqvfXV" target="_blank" class="text-accent hover:underline">Curso em Vídeo - Lógica</a></li></ul></div><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Mini-Desafio:</h5><p class="text-sm text-gray-400">Escreva em pseudocódigo os passos para fazer café.</p></div></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">2. Conceitos de S.O.</h4><input type="checkbox" class="task-checkbox" id="task-2"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Entenda o que qualquer sistema operativo faz por baixo do capô.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Mini-Desafio:</h5><p class="text-sm text-gray-400">Abra o Gestor de Tarefas e identifique um processo do sistema, um de uma aplicação e a RAM usada pelo seu navegador.</p></div></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">3. Linux</h4><input type="checkbox" class="task-checkbox" id="task-3"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">A maioria das ferramentas de segurança e servidores web corre em Linux.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Mini-Desafio:</h5><p class="text-sm text-gray-400">Na sua VM Linux, crie uma pasta "Hacking" e um ficheiro "notas.txt" dentro dela, escrevendo "Hello World". Tudo pelo terminal.</p></div></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">4. Redes</h4><input type="checkbox" class="task-checkbox" id="task-4"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">É preciso saber como a informação viaja para encontrar pontos fracos.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Mini-Desafio:</h5><p class="text-sm text-gray-400">Use <code>ping google.com</code> e <code>traceroute google.com</code> para ver o tempo de resposta e o caminho dos dados.</p></div></div></div></div>
+                </div>
+            </section>
+            
+            <section id="fase2" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 2: AS FERRAMENTAS DO OFÍCIO</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">5. Python</h4><input type="checkbox" class="task-checkbox" id="task-5"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Automatiza tudo. Em vez de fazer algo 1000 vezes à mão, escreve um script que o faz por si em segundos.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">6. Bases de Dados (SQL)</h4><input type="checkbox" class="task-checkbox" id="task-6"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">É aqui que a informação valiosa é guardada. Entender como funcionam é crucial para saber como as proteger.</p></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase3" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 3: A MENTALIDADE DE SEGURANÇA</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">7. A Mentalidade Hacker</h4><input type="checkbox" class="task-checkbox" id="task-7"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Ser hacker é mais sobre como você pensa do que sobre as ferramentas que usa.</p><ul class="text-left space-y-2 list-disc list-inside"><li><strong>Curiosidade Extrema</strong></li><li><strong>Resolução de Problemas</strong></li><li><strong>Persistência</strong></li></ul></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">8. OSINT e Google Hacking</h4><input type="checkbox" class="task-checkbox" id="task-8"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">A arte de recolher informação a partir de fontes públicas. O Google é a sua primeira e mais poderosa ferramenta.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Recursos:</h5><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><a href="https://www.exploit-db.com/google-hacking-database" target="_blank" class="text-accent hover:underline">Google Hacking Database</a></li><li><a href="https://osintframework.com/" target="_blank" class="text-accent hover:underline">OSINT Framework</a></li></ul></div></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">9. Engenharia Social</h4><input type="checkbox" class="task-checkbox" id="task-9"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Muitas vezes, o elo mais fraco não é o software, mas sim a pessoa que o utiliza.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">10. Privacidade e Anonimato</h4><input type="checkbox" class="task-checkbox" id="task-10"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Um hacker ético precisa de saber como proteger a sua própria identidade e os seus dados durante uma investigação.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Recursos:</h5><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><a href="https://riseup.net/pt/vpn" target="_blank" class="text-accent hover:underline">RiseupVPN</a></li><li><a href="https://www.torproject.org/" target="_blank" class="text-accent hover:underline">Tor Browser</a></li></ul></div></div></div></div>
+                    <div class="card rounded-lg md:col-span-2"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">11. As Falhas Mais Comuns</h4><input type="checkbox" class="task-checkbox" id="task-11"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Conheça o seu inimigo. Estas são as portas e janelas que os atacantes mais procuram.</p><div class="border-t border-gray-700 pt-4 mt-4"><h5 class="font-bold text-title mb-2">Recursos:</h5><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><a href="https://owasp.org/Top10/" target="_blank" class="text-accent hover:underline">OWASP Top 10</a></li></ul></div></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase4" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 4: O ARSENAL - O NOTEBOOK FANTASMA</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">12. O Conceito</h4><input type="checkbox" class="task-checkbox" id="task-12"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Um "Notebook Fantasma" é um computador configurado para operar de forma anónima e sem deixar rastros, minimizando a exposição de dados.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">13. Virtualização Essencial</h4><input type="checkbox" class="task-checkbox" id="task-13"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Nunca use o seu sistema principal para testes. Use máquinas virtuais (VMs) para criar um ambiente de laboratório isolado e seguro.</p><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><strong>Ferramentas:</strong> <code>VirtualBox</code> (gratuito) ou <code>VMware Workstation</code>.</li></ul></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">14. Escolha do S.O. de Ataque</h4><input type="checkbox" class="task-checkbox" id="task-14"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Use distribuições Linux focadas em segurança, que já vêm com centenas de ferramentas pré-instaladas.</p><ul class="text-left space-y-1 list-disc list-inside text-sm"><li><strong>Recomendações:</strong> <code>Kali Linux</code> ou <code>Parrot OS</code>.</li></ul></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">15. Segurança Operacional (OPSEC)</h4><input type="checkbox" class="task-checkbox" id="task-15"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">OPSEC é o processo de se proteger a si mesmo e à sua informação. Pense sempre: "Que rastros estou a deixar?".</p><ul class="text-left space-y-1 list-disc list-inside text-sm"><li>Use sempre uma VPN.</li><li>Não use as suas contas pessoais no seu ambiente de hacking.</li><li>Tenha cuidado com o que partilha online.</li></ul></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase5" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 5: A PRÁTICA LEGAL</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="https://tryhackme.com" target="_blank" rel="noopener noreferrer" class="platform-card card rounded-lg p-6 text-center"><h4 class="text-xl font-bold text-accent mb-2">TryHackMe</h4><p>Perfeito para iniciantes. Muito didático e com trilhas de aprendizagem guiadas.</p></a>
+                    <a href="https://www.hackthebox.com" target="_blank" rel="noopener noreferrer" class="platform-card card rounded-lg p-6 text-center"><h4 class="text-xl font-bold text-accent mb-2">Hack The Box</h4><p>Mais desafiador. Simula máquinas e cenários do mundo real para testar as suas habilidades.</p></a>
+                    <a href="https://owasp.org/www-project-juice-shop/" target="_blank" rel="noopener noreferrer" class="platform-card card rounded-lg p-6 text-center"><h4 class="text-xl font-bold text-accent mb-2">OWASP Juice Shop</h4><p>Uma aplicação web feita para ser vulnerável. Ótima para praticar o OWASP Top 10.</p></a>
+                    <a href="https://www.vulnhub.com" target="_blank" rel="noopener noreferrer" class="platform-card card rounded-lg p-6 text-center"><h4 class="text-xl font-bold text-accent mb-2">VulnHub</h4><p>Uma coleção de máquinas virtuais vulneráveis que pode descarregar e atacar no seu PC.</p></a>
+                </div>
+            </section>
+            
+            <section id="fase6" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 6: ESPECIALIZAÇÕES E TÓPICOS AVANÇADOS</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Pentest de Infraestrutura</h4><input type="checkbox" class="task-checkbox" id="task-16"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">O foco é a rede interna de uma empresa. Encontrar falhas em servidores, routers e outros dispositivos.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Segurança de Redes Wi-Fi</h4><input type="checkbox" class="task-checkbox" id="task-17"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">As redes sem fios são um ponto de entrada comum. Aprender a testá-las é uma habilidade muito requisitada.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Análise de Malware</h4><input type="checkbox" class="task-checkbox" id="task-18"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">A arte de dissecar software malicioso para entender o que ele faz, como se espalha e como o neutralizar.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Hardware Hacking</h4><input type="checkbox" class="task-checkbox" id="task-19"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Explorar vulnerabilidades em dispositivos físicos, desde consolas de jogos a sistemas de controlo industrial.</p></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase7" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 7: WEB HACKING AVANÇADO</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Vulnerabilidades Web Complexas</h4><input type="checkbox" class="task-checkbox" id="task-20"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Para além do OWASP Top 10, existem falhas mais subtis e complexas que separam os amadores dos profissionais.</p><ul class="text-left space-y-2 list-disc list-inside"><li><strong>SSRF (Server-Side Request Forgery):</strong> Forçar um servidor a fazer pedidos em seu nome.</li><li><strong>XXE (XML External Entity):</strong> Explorar parsers de XML mal configurados para ler ficheiros locais.</li><li><strong>Inseguranças na Deserialização:</strong> Manipular "objetos" guardados para executar código.</li></ul></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase8" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 8: REDES CORPORATIVAS E ACTIVE DIRECTORY</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Ataques em Active Directory</h4><input type="checkbox" class="task-checkbox" id="task-21"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">O Active Directory (AD) é o coração da maioria das redes empresariais. Aprender a atacá-lo (e a defendê-lo) é crucial.</p><ul class="text-left space-y-2 list-disc list-inside"><li><strong>Enumeração:</strong> Descobrir utilizadores, grupos e políticas.</li><li><strong>Ataques Comuns:</strong> Estude técnicas como Pass-the-Hash, Kerberoasting e Golden Ticket.</li></ul></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase9" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 9: ENGENHARIA REVERSA E DESENVOLVIMENTO DE EXPLOITS</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Fundamentos de Assembly</h4><input type="checkbox" class="task-checkbox" id="task-22"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Aprender a ler a linguagem mais próxima do processador. É a base para entender como os programas realmente funcionam e onde podem falhar.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Buffer Overflows</h4><input type="checkbox" class="task-checkbox" id="task-23"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">A vulnerabilidade "mãe" de todas as falhas de memória. Aprender a explorar um buffer overflow é um rito de passagem para qualquer hacker.</p></div></div></div>
+                </div>
+            </section>
+
+            <section id="fase10" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 10: CARREIRA E BUG BOUNTY</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Programas de Bug Bounty</h4><input type="checkbox" class="task-checkbox" id="task-24"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Ser pago para hackear legalmente. Plataformas como HackerOne e Bugcrowd conectam hackers com empresas que querem testar a sua segurança.</p></div></div></div>
+                    <div class="card rounded-lg"><div class="card-header cursor-pointer p-6 flex justify-between items-center"><h4 class="text-xl sm:text-2xl font-bold text-accent">Certificações</h4><input type="checkbox" class="task-checkbox" id="task-25"></div><div class="collapsible-content"><div class="px-6 pb-6 pt-2"><p class="mb-4">Certificações validam o seu conhecimento. A OSCP (Offensive Security Certified Professional) é uma das mais respeitadas e práticas do mundo.</p></div></div></div>
+                </div>
+            </section>
+            
+            <section id="fase11" class="content-section scroll-mt-24">
+                <h3 class="text-3xl font-bold text-title border-b-2 border-accent pb-2 mb-8 inline-block">FASE 11: COMUNIDADE E PRÓXIMOS PASSOS</h3>
+                <p class="text-lg text-gray-400 mb-10">Nenhum hacker trabalha sozinho. A comunidade é a sua maior aliada para aprender, tirar dúvidas e manter-se atualizado.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card rounded-lg p-6">
+                        <h4 class="text-xl sm:text-2xl font-bold text-accent mb-4">Mantenha-se Conectado</h4>
+                        <ul class="text-left space-y-2 list-disc list-inside">
+                            <li><strong>Comunidades Online:</strong> Participe em fóruns e subreddits como <code>r/hacking</code>, <code>r/netsecstudents</code> e <code>r/HowToHack</code>.</li>
+                            <li><strong>Siga os Especialistas:</strong> Encontre investigadores de segurança no X (Twitter) e no YouTube. Alguns bons nomes para começar são The Cyber Mentor, John Hammond e IppSec.</li>
+                            <li><strong>Eventos e CTFs:</strong> Participe em competições de "Capture The Flag" (CTF) para testar as suas habilidades de forma divertida e competitiva.</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-lg p-6">
+                        <h4 class="text-xl sm:text-2xl font-bold text-accent mb-4">O Aprendizado Nunca Termina</h4>
+                        <p>A cibersegurança muda todos os dias. A sua jornada de aprendizagem é contínua. Seja curioso, continue a praticar nas plataformas da Fase 4 e nunca pare de fazer perguntas.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <div class="flex justify-center items-center space-x-4 mb-4">
+                <a href="https://x.com/bruxofantasma0x" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.46 13.825h1.57L4.646 2.155H2.986l8.474 11.67Z"/></svg>
+                </a>
+                <a href="https://discord.gg/4s4bau959s" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M524.531 69.836a1.5 1.5 0 00-1.348-.684H116.818a1.5 1.5 0 00-1.348.684L3.142 334.869a1.5 1.5 0 00.255 1.646l83.855 98.998c.342.404.836.633 1.348.633h463.107c.512 0 1.006-.229 1.348-.633l83.855-98.998a1.5 1.5 0 00.255-1.646L524.531 69.836zM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.239 52.844-59.239c29.695 0 53.306 26.587 52.844 59.239 0 32.652-23.409 59.239-52.844 59.239zm195.018 0c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.239 52.844-59.239c29.695 0 53.306 26.587 52.844 59.239 0 32.652-23.409 59.239-52.844 59.239z"></path>
+                    </svg>
+                </a>
+                <a href="mailto:bruxofantasma0x@privatemx.org" class="hover:text-accent transition-colors font-mono text-sm">bruxofantasma0x@privatemx.org</a>
+            </div>
+            <p class="font-mono">Com grande poder, vem grande responsabilidade. Use o seu conhecimento para o bem.</p>
+            <p class="mt-2 text-sm">Guia criado por BruxoFantasma0x.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const desktopMenuButton = document.getElementById('desktop-menu-button');
+            const desktopMenu = document.getElementById('desktop-menu');
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const progressBar = document.getElementById('progress-bar');
+            const totalTasks = checkboxes.length;
+            const themeToggle = document.getElementById('theme-toggle');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+            // Theme Functions
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }
+                // Corrige o estado dos ícones ao iniciar
+                if (theme === 'light') {
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                } else {
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }
+            }
+            
+            function toggleTheme() {
+                const isLight = document.documentElement.hasAttribute('data-theme');
+                const newTheme = isLight ? 'dark' : 'light';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            }
+
+            // Cookie Functions
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+            }
+
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            // Progress Functions
+            function updateProgress() {
+                const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
+                const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+                if(progressBar) {
+                    progressBar.style.width = progressPercentage + '%';
+                }
+            }
+
+            function saveProgress() {
+                const progressState = Array.from(checkboxes).map(cb => cb.checked ? '1' : '0').join('');
+                setCookie('hackerJourneyProgress', progressState, 365);
+            }
+
+            function loadProgress() {
+                const progressState = getCookie('hackerJourneyProgress');
+                if (progressState && progressState.length === checkboxes.length) {
+                    checkboxes.forEach((checkbox, index) => {
+                        if (progressState[index] === '1') {
+                            checkbox.checked = true;
+                        } else {
+                            checkbox.checked = false;
+                        }
+                    });
+                } else {
+                    // Se o cookie não bate com o número de checkboxes, limpa tudo
+                    checkboxes.forEach(cb => cb.checked = false);
+                }
+                updateProgress();
+            }
+            
+            // Search Function
+            function handleSearch(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                document.querySelectorAll('.card').forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    if (searchTerm === '' || cardText.includes(searchTerm)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                document.querySelectorAll('.content-section').forEach(section => {
+                    const visibleCards = section.querySelectorAll('.card:not(.hidden)').length;
+                    if (visibleCards > 0) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+                // Limpar busca ao apertar ESC
+                if (event.key === 'Escape') {
+                    event.target.value = '';
+                    document.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
+                    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('hidden'));
+                }
+            }
+
+            // Event Listeners
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            if (desktopMenuButton && desktopMenu) {
+                desktopMenuButton.addEventListener('click', () => {
+                    desktopMenu.classList.toggle('hidden');
+                    desktopMenuButton.classList.toggle('open');
+                });
+            }
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => {
+                            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                                mobileMenu.classList.add('hidden');
+                            }
+                            if (desktopMenu && !desktopMenu.classList.contains('hidden')) {
+                                desktopMenu.classList.add('hidden');
+                                desktopMenuButton.classList.remove('open');
+                            }
+                        }, 300);
+                    }
+                });
+            });
+
+            // Delegação de eventos para performance e melhor experiência
+            document.body.addEventListener('click', function(e) {
+                const header = e.target.closest('.card-header');
+                if (!header) return;
+                if (e.target.type === 'checkbox') return;
+                // Acessibilidade: permite foco e abertura via teclado
+                header.setAttribute('tabindex', '0');
+                header.setAttribute('role', 'button');
+                header.setAttribute('aria-expanded', header.getAttribute('aria-expanded') || 'false');
+                header.setAttribute('aria-controls', header.nextElementSibling ? header.nextElementSibling.id : '');
+                const currentCard = header.closest('.card');
+                if (!currentCard) return;
+                const content = currentCard.querySelector('.collapsible-content');
+                if (content && !content.id) {
+                    content.id = 'collapsible-' + Math.random().toString(36).substr(2, 9);
+                    header.setAttribute('aria-controls', content.id);
+                }
+                const isOpening = !currentCard.classList.contains('open');
+                // Fecha todos os outros cards
+                document.querySelectorAll('.card.open').forEach(openCard => {
+                    if (openCard !== currentCard) {
+                        openCard.classList.remove('open');
+                        openCard.querySelector('.collapsible-content').style.maxHeight = null;
+                        openCard.querySelector('.card-header').setAttribute('aria-expanded', 'false');
+                    }
+                });
+                // Abre ou fecha o card clicado
+                if (isOpening) {
+                    currentCard.classList.add('open');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    header.setAttribute('aria-expanded', 'true');
+                } else {
+                    currentCard.classList.remove('open');
+                    content.style.maxHeight = null;
+                    header.setAttribute('aria-expanded', 'false');
+                }
+            });
+            // Acessibilidade: foco visual
+            document.body.addEventListener('focusin', function(e) {
+                const header = e.target.closest('.card-header');
+                if (header) header.classList.add('ring', 'ring-cyan-400');
+                if (header && !header.hasAttribute('tabindex')) header.setAttribute('tabindex', '0');
+            });
+            document.body.addEventListener('focusout', function(e) {
+                const header = e.target.closest('.card-header');
+                if (header) header.classList.remove('ring', 'ring-cyan-400');
+            });
+            // Teclado: Enter/Espaço abre card
+            document.body.addEventListener('keydown', function(e) {
+                const header = e.target.closest('.card-header');
+                if (!header) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    header.click();
+                }
+            });
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    saveProgress();
+                    updateProgress();
+                });
+                // Acessibilidade: label para cada checkbox
+                if (!checkbox.hasAttribute('aria-label')) {
+                    const label = checkbox.closest('.card-header')?.querySelector('h4');
+                    if (label) checkbox.setAttribute('aria-label', label.textContent.trim());
+                }
+            });
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+            // Robustez: só adiciona listeners se os elementos existem
+            const searchBar = document.getElementById('search-bar');
+            if (searchBar) {
+                searchBar.addEventListener('input', handleSearch);
+                searchBar.addEventListener('keydown', handleSearch);
+            }
+            const mobileSearchBar = document.getElementById('mobile-search-bar');
+            if (mobileSearchBar) {
+                mobileSearchBar.addEventListener('input', handleSearch);
+                mobileSearchBar.addEventListener('keydown', handleSearch);
+            }
+
+            // Clique fora do menu fecha dropdowns (UX)
+            document.addEventListener('mousedown', function(e) {
+                if (desktopMenu && !desktopMenu.classList.contains('hidden')) {
+                    if (!desktopMenu.contains(e.target) && !desktopMenuButton.contains(e.target)) {
+                        desktopMenu.classList.add('hidden');
+                        desktopMenuButton.classList.remove('open');
+                    }
+                }
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+            // Fecha menu mobile ao redimensionar para desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768 && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+            // Initial Load
+            // Fallback para localStorage indisponível
+            let savedTheme = 'dark';
+            try {
+                savedTheme = localStorage.getItem('theme') || 'dark';
+            } catch (e) {
+                savedTheme = 'dark';
+            }
+            applyTheme(savedTheme);
+            loadProgress();
+        });
+    </script>
+
+</body>
+</html>
